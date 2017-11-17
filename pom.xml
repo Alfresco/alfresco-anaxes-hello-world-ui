@@ -47,6 +47,7 @@
                             <directory>${basedir}</directory>
                             <includes>
                                 <include>**/node_modules/**</include>
+                                <include>**/dist/**</include>
                                 <include>package-lock.json</include>
                             </includes>
                         </fileset>
