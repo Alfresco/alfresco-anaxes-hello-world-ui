@@ -26,6 +26,6 @@ target
 *.war
 *.ear
 
-# Kubernetes Helm
-requirements.lock
-**/charts/*.tgz
+# Node
+node_modules
+package-lock.json
