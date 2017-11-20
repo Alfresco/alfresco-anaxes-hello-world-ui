@@ -10,16 +10,69 @@
 
     <properties>
         <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+        <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
     </properties>
 
     <build>
         <plugins>
-            <!-- On mvn:package add the 'dist' resources to the build output directory and jar. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <executions>
+                    <!-- On mvn:compile run 'npm install' -->
+                    <execution>
+                        <id>npm-install@compile</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- On mvn:compile output the npm configuration. -->
+                    <execution>
+                        <id>npm-config-list@compile</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>config</argument>
+                                <argument>list</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- On mvn:compile run 'npm run build' to create the 'dist' folder. -->
+                    <execution>
+                        <id>npm-run-build@compile</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- On mvn:package add the 'dist' resources to the build output directory. -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
+                <version>${maven-assembly-plugin.version}</version>
                 <configuration>
-                    <descriptor>alfresco-anaxes-hello-world-ui-zip.xml</descriptor>
+                    <descriptor>alfresco-anaxes-hello-world-ui-tar.xml</descriptor>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions> 
@@ -31,7 +84,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- On mvn:clean remove the node_modules directory and package-lock.json file -->
+            <!-- On mvn:clean remove the node_modules and dist directories and package-lock.json file -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>${maven-clean-plugin.version}</version>
@@ -43,6 +96,7 @@
                                 <include>**/node_modules/**</include>
                                 <include>**/dist/**</include>
                                 <include>package-lock.json</include>
+                                <include>**/dist/**</include>
                             </includes>
                         </fileset>
                     </filesets>

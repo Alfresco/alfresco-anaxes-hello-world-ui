@@ -3,21 +3,15 @@
   <id>zip-dist-folder</id>
   <baseDirectory>/</baseDirectory>
   <formats>
-    <format>zip</format>
+    <format>tar</format>
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${basedir}</directory>
-      <outputDirectory>hello-ui-build</outputDirectory>
-      <excludes>
-        <exclude>package-lock.json</exclude>
-        <exclude>**/node_modules/**</exclude>
-      </excludes>
+      <directory>${basedir}/dist</directory>
+      <outputDirectory>/</outputDirectory>
       <includes>
-        <include>*.json</include>
-        <include>*.js</include>
-        <include>**/src/**</include>
+        <include>**.*</include>
       </includes>
     </fileSet>
   </fileSets>
