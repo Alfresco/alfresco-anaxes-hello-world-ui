@@ -8,12 +8,6 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!--<parent>
-        <groupId>org.alfresco.deployment</groupId>
-        <artifactId>anaxes-hello-world</artifactId>
-        <version>0.1-SNAPSHOT</version>
-    </parent>-->
-
     <properties>
         <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
     </properties>
