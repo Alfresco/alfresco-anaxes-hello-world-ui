@@ -96,7 +96,6 @@
                                 <include>**/node_modules/**</include>
                                 <include>**/dist/**</include>
                                 <include>package-lock.json</include>
-                                <include>**/dist/**</include>
                             </includes>
                         </fileset>
                     </filesets>
