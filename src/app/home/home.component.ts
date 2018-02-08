@@ -18,6 +18,7 @@ import { Http, Response } from '@angular/http';
 import { AppConfigService } from 'ng2-alfresco-core';
 import 'rxjs/add/operator/map';
 import { ActivatedRoute } from '@angular/router';
+import { OAuthService } from "angular-oauth2-oidc";
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -32,8 +33,9 @@ export class HomeComponent {
   msg;
 
   constructor(private route: ActivatedRoute, private http:Http,
-        appConfig: AppConfigService) {
+        appConfig: AppConfigService, private oauthService: OAuthService) {
     this.apiUrl = appConfig.get('backEndHost') + '/hello/';
+    console.debug('access-token', this.oauthService.getAccessToken());
   }
 
   private ngOnInit() {
