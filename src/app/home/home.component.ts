@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { AppConfigService } from 'ng2-alfresco-core';
 import 'rxjs/add/operator/map';
 import { ActivatedRoute } from '@angular/router';
@@ -34,12 +34,11 @@ export class HomeComponent {
 
   constructor(private route: ActivatedRoute, private http:Http,
         appConfig: AppConfigService, private oauthService: OAuthService) {
-    this.apiUrl = appConfig.get('backEndHost') + '/hello/';
-    console.debug('access-token', this.oauthService.getAccessToken());
+          this.apiUrl = appConfig.get('backEndHost') + '/hello/';
   }
 
   private ngOnInit() {
-     this.sub = this.route.params.subscribe(params => {
+    this.sub = this.route.params.subscribe(params => {
        this.id = params['id'];
       });
      this.getResponse(this.id);
@@ -47,7 +46,13 @@ export class HomeComponent {
 
   getResponse(id) {
      this.apiUrl += id;
-     return this.http.get(this.apiUrl).
+     console.debug("apiUrl", this.apiUrl);
+     let accessToken = this.oauthService.getAccessToken();
+     console.debug('access-token', accessToken);
+     let myHeaders = new Headers();
+     myHeaders.set("Authorization", "Bearer " + accessToken);
+     let options = new RequestOptions({ headers: myHeaders });
+     return this.http.get(this.apiUrl, options).
        map((res: Response) => res.json()).subscribe(data => {
          this.msg=data.value;
          this.data = data;
