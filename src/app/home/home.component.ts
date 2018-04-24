@@ -72,7 +72,7 @@ export class HomeComponent {
     let apsURL="http://<ApsURL>/activiti-app/api/enterprise/profile";
     let acsURL="http://<AcsURL>/alfresco/api/-default-/public/alfresco/versions/1/people/-me-";
     let accessToken = this.oauthService.getAccessToken();
-    console.log('access-token', accessToken);
+    console.debug('access-token', accessToken);
     let myHeaders = new Headers();
     myHeaders.set("Authorization", "Bearer " + accessToken);
     let options = new RequestOptions({ headers: myHeaders });
