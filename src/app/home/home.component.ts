@@ -29,6 +29,12 @@ export class HomeComponent {
   private id;
   private sub: any;
   private apiUrl;
+  apsLastName;
+  apsEmail;
+  acsFirstName;
+  acsEmail;
+  apsError;
+  acsError;
   data: any ={};
   msg;
 
@@ -41,7 +47,8 @@ export class HomeComponent {
     this.sub = this.route.params.subscribe(params => {
        this.id = params['id'];
       });
-     this.getResponse(this.id);
+    this.dbpEndpointsConsumtion();
+    //this.getResponse(this.id);
   }
 
   getResponse(id) {
@@ -61,4 +68,29 @@ export class HomeComponent {
          this.msg = 'ERROR: Something went wrong!';
        })
    }
+  dbpEndpointsConsumtion() {
+    let apsURL="http://<ApsURL>/activiti-app/api/enterprise/profile";
+    let acsURL="http://<AcsURL>/alfresco/api/-default-/public/alfresco/versions/1/people/-me-";
+    let accessToken = this.oauthService.getAccessToken();
+    console.log('access-token', accessToken);
+    let myHeaders = new Headers();
+    myHeaders.set("Authorization", "Bearer " + accessToken);
+    let options = new RequestOptions({ headers: myHeaders });
+    this.http.get(apsURL,options).
+      map((res: Response) => res.json()).subscribe(data => {
+        this.apsLastName=data.lastName;
+        this.apsEmail=data.email;
+      },
+      err => {
+        this.apsError = 'ERROR: Could not reach APS Endpoint!';
+      });
+    this.http.get(acsURL,options).
+      map((res: Response) => res.json()).subscribe(data => {
+        this.acsFirstName=data.entry.firstName;
+        this.acsEmail=data.entry.email;
+      },
+      err => {
+        this.acsError = 'ERROR: Could not reach ACS Endpoint!';
+      });  
+  }
 }
