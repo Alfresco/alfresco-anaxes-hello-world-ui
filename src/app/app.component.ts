@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { OAuthService } from 'angular-oauth2-oidc';
+import { JwksValidationHandler } from 'angular-oauth2-oidc';
+import { authConfig } from './auth.config';
 import { Component } from '@angular/core';
 import { AlfrescoTranslationService } from 'ng2-alfresco-core';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -23,8 +27,14 @@ import { AlfrescoTranslationService } from 'ng2-alfresco-core';
 })
 export class AppComponent {
 
-  constructor(translationService: AlfrescoTranslationService) {
+  constructor(translationService: AlfrescoTranslationService, private oauthService: OAuthService) {
     translationService.use('en');
+    this.configureWithNewConfigApi();
   }
 
+  private configureWithNewConfigApi() {
+    this.oauthService.configure(authConfig);
+    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+    this.oauthService.loadDiscoveryDocumentAndLogin();
+  }
 }

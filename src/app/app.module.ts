@@ -19,8 +19,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdfModule } from './adf.module';
 import { HomeComponent } from './home/home.component';
 import { AppComponent } from './app.component';
+import { AuthConfig, JwksValidationHandler, OAuthModule, ValidationHandler } from 'angular-oauth2-oidc';
 
-import {HttpModule} from '@angular/http';
+//import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -35,7 +37,8 @@ const appRoutes: Routes = [
       // { enableTracing: true } // <-- debugging purposes only
     ),
     AdfModule,
-    HttpModule
+    HttpClientModule,
+    OAuthModule.forRoot()
   ],
   declarations: [
     AppComponent,

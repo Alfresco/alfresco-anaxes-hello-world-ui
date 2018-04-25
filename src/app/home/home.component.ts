@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { AppConfigService } from 'ng2-alfresco-core';
 import 'rxjs/add/operator/map';
 import { ActivatedRoute } from '@angular/router';
+import { OAuthService } from "angular-oauth2-oidc";
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -28,24 +29,37 @@ export class HomeComponent {
   private id;
   private sub: any;
   private apiUrl;
+  apsLastName;
+  apsEmail;
+  acsFirstName;
+  acsEmail;
+  apsError;
+  acsError;
   data: any ={};
   msg;
 
   constructor(private route: ActivatedRoute, private http:Http,
-        appConfig: AppConfigService) {
-    this.apiUrl = appConfig.get('backEndHost') + '/hello/';
+        appConfig: AppConfigService, private oauthService: OAuthService) {
+          this.apiUrl = appConfig.get('backEndHost') + '/hello/';
   }
 
   private ngOnInit() {
-     this.sub = this.route.params.subscribe(params => {
+    this.sub = this.route.params.subscribe(params => {
        this.id = params['id'];
       });
-     this.getResponse(this.id);
+    this.dbpEndpointsConsumtion();
+    //this.getResponse(this.id);
   }
 
   getResponse(id) {
      this.apiUrl += id;
-     return this.http.get(this.apiUrl).
+     console.debug("apiUrl", this.apiUrl);
+     let accessToken = this.oauthService.getAccessToken();
+     console.debug('access-token', accessToken);
+     let myHeaders = new Headers();
+     myHeaders.set("Authorization", "Bearer " + accessToken);
+     let options = new RequestOptions({ headers: myHeaders });
+     return this.http.get(this.apiUrl, options).
        map((res: Response) => res.json()).subscribe(data => {
          this.msg=data.value;
          this.data = data;
@@ -54,4 +68,29 @@ export class HomeComponent {
          this.msg = 'ERROR: Something went wrong!';
        })
    }
+  dbpEndpointsConsumtion() {
+    let apsURL="http://<ApsURL>/activiti-app/api/enterprise/profile";
+    let acsURL="http://<AcsURL>/alfresco/api/-default-/public/alfresco/versions/1/people/-me-";
+    let accessToken = this.oauthService.getAccessToken();
+    console.debug('access-token', accessToken);
+    let myHeaders = new Headers();
+    myHeaders.set("Authorization", "Bearer " + accessToken);
+    let options = new RequestOptions({ headers: myHeaders });
+    this.http.get(apsURL,options).
+      map((res: Response) => res.json()).subscribe(data => {
+        this.apsLastName=data.lastName;
+        this.apsEmail=data.email;
+      },
+      err => {
+        this.apsError = 'ERROR: Could not reach APS Endpoint!';
+      });
+    this.http.get(acsURL,options).
+      map((res: Response) => res.json()).subscribe(data => {
+        this.acsFirstName=data.entry.firstName;
+        this.acsEmail=data.entry.email;
+      },
+      err => {
+        this.acsError = 'ERROR: Could not reach ACS Endpoint!';
+      });  
+  }
 }
