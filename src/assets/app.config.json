@@ -1,3 +1,5 @@
 {
-    "backEndHost": "HELLO_BACKEND_URL"
+    "backEndHost": "HELLO_BACKEND_URL",
+    "acsHost": "ACS_URL",
+    "apsHost": "APS_URL"
 }

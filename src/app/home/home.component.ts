@@ -19,6 +19,8 @@ import { AppConfigService } from 'ng2-alfresco-core';
 import 'rxjs/add/operator/map';
 import { ActivatedRoute } from '@angular/router';
 import { OAuthService } from "angular-oauth2-oidc";
+import { APSPersonDetailsService } from './apsPersonDetailsService';
+import { ACSPersonDetailsService } from './acsPersonDetailsService';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -29,18 +31,16 @@ export class HomeComponent {
   private id;
   private sub: any;
   private apiUrl;
-  apsLastName;
-  apsEmail;
-  acsFirstName;
-  acsEmail;
-  apsError;
-  acsError;
+  aps;
+  acs;
   data: any ={};
   msg;
 
   constructor(private route: ActivatedRoute, private http:Http,
         appConfig: AppConfigService, private oauthService: OAuthService) {
           this.apiUrl = appConfig.get('backEndHost') + '/hello/';
+          this.aps = new APSPersonDetailsService(appConfig.get('apsHost'),http);
+          this.acs = new ACSPersonDetailsService(appConfig.get('acsHost'),http);
   }
 
   private ngOnInit() {
@@ -48,7 +48,7 @@ export class HomeComponent {
        this.id = params['id'];
       });
     this.dbpEndpointsConsumtion();
-    //this.getResponse(this.id);
+    this.getResponse(this.id);
   }
 
   getResponse(id) {
@@ -69,28 +69,13 @@ export class HomeComponent {
        })
    }
   dbpEndpointsConsumtion() {
-    let apsURL="http://<ApsURL>/activiti-app/api/enterprise/profile";
-    let acsURL="http://<AcsURL>/alfresco/api/-default-/public/alfresco/versions/1/people/-me-";
     let accessToken = this.oauthService.getAccessToken();
     console.debug('access-token', accessToken);
     let myHeaders = new Headers();
     myHeaders.set("Authorization", "Bearer " + accessToken);
     let options = new RequestOptions({ headers: myHeaders });
-    this.http.get(apsURL,options).
-      map((res: Response) => res.json()).subscribe(data => {
-        this.apsLastName=data.lastName;
-        this.apsEmail=data.email;
-      },
-      err => {
-        this.apsError = 'ERROR: Could not reach APS Endpoint!';
-      });
-    this.http.get(acsURL,options).
-      map((res: Response) => res.json()).subscribe(data => {
-        this.acsFirstName=data.entry.firstName;
-        this.acsEmail=data.entry.email;
-      },
-      err => {
-        this.acsError = 'ERROR: Could not reach ACS Endpoint!';
-      });  
+    this.aps.callPersonDetailsService(options);
+    this.acs.callPersonDetailsService(options);
+    
   }
 }
