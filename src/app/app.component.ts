@@ -17,7 +17,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 import { Component } from '@angular/core';
-import { AlfrescoTranslationService } from 'ng2-alfresco-core';
+import { AlfrescoTranslationService, AppConfigService } from 'ng2-alfresco-core';
 import { Router } from "@angular/router";
 
 @Component({
@@ -26,13 +26,17 @@ import { Router } from "@angular/router";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  
+  private identityServiceURL;
 
-  constructor(translationService: AlfrescoTranslationService, private oauthService: OAuthService) {
+  constructor(translationService: AlfrescoTranslationService, private oauthService: OAuthService, appConfig: AppConfigService) {
     translationService.use('en');
+    this.identityServiceURL = appConfig.get("identityServiceHost");
     this.configureWithNewConfigApi();
   }
 
   private configureWithNewConfigApi() {
+    authConfig.issuer = this.identityServiceURL+'/auth/realms/alfresco';
     this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
     this.oauthService.loadDiscoveryDocumentAndLogin();
