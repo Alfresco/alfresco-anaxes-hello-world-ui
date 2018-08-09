@@ -5,7 +5,7 @@ export class ACSPersonDetailsService {
     email: string;
     error: string;
     constructor(acsUrl: string, private http: Http) {
-        this.url = acsUrl+"/alfresco/api/-default-/public/alfresco/versions/1/people/-me-";
+        this.url = acsUrl+"/api/-default-/public/alfresco/versions/1/people/-me-";
     }
     public callPersonDetailsService(options:RequestOptions) {
       this.http.get(this.url,options).

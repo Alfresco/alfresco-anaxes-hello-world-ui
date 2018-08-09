@@ -36,7 +36,7 @@ export class AppComponent {
   }
 
   private configureWithNewConfigApi() {
-    authConfig.issuer = this.identityServiceURL+'/auth/realms/alfresco';
+    authConfig.issuer = this.identityServiceURL+'/realms/alfresco';
     this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
     this.oauthService.loadDiscoveryDocumentAndLogin();

@@ -38,7 +38,7 @@ export class HomeComponent {
 
   constructor(private route: ActivatedRoute, private http:Http,
         appConfig: AppConfigService, private oauthService: OAuthService) {
-          this.apiUrl = appConfig.get('backEndHost') + '/hello/';
+          this.apiUrl = appConfig.get('backEndHost');
           this.aps = new APSPersonDetailsService(appConfig.get('apsHost'),http);
           this.acs = new ACSPersonDetailsService(appConfig.get('acsHost'),http);
   }
