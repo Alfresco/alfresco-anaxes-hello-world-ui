@@ -6,7 +6,7 @@ export class APSPersonDetailsService {
   email: string;
   error: string;
   constructor(apsUrl: string, private http: Http) {
-    this.url = apsUrl + "/activiti/api/enterprise/profile";
+    this.url = apsUrl + "/api/enterprise/profile";
   }
   callPersonDetailsService(options:RequestOptions) {
     this.http.get(this.url, options).
