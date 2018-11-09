@@ -13,28 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ViewEncapsulation, Component } from '@angular/core';
-import { TranslationService, AuthenticationService } from '@alfresco/adf-core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './app-layout.component.html',
+  styleUrls: ['./app-layout.component.css']
 })
-export class AppComponent {
-
-  constructor(translationService: TranslationService,
-              private authService: AuthenticationService,
-              private router: Router) {
-    translationService.use('en');
-  }
-
-  logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
-  }
-
-}
+export class AppLayoutComponent {}

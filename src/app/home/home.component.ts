@@ -1,81 +1,83 @@
-/*
- * Copyright 2018 Alfresco Software, Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-import { Component, OnInit } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { AppConfigService } from 'ng2-alfresco-core';
-import 'rxjs/add/operator/map';
-import { ActivatedRoute } from '@angular/router';
-import { OAuthService } from "angular-oauth2-oidc";
-import { APSPersonDetailsService } from './apsPersonDetailsService';
-import { ACSPersonDetailsService } from './acsPersonDetailsService';
+import { Component } from '@angular/core';
+import { AppConfigService, AuthenticationService } from '@alfresco/adf-core';
+import { Http, RequestOptions, Headers } from '@angular/http';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+  
+  private token;
+  
+  private apsUrl;
+  private apsLastName;
+  private apsEmail;
+  private apsError;
 
-  private id;
-  private sub: any;
-  private apiUrl;
-  aps;
-  acs;
-  data: any ={};
-  msg;
+  private acsUrl;
+  private acsFirstName;
+  private acsEmail;
+  private acsError;
 
-  constructor(private route: ActivatedRoute, private http:Http,
-        appConfig: AppConfigService, private oauthService: OAuthService) {
-          this.apiUrl = appConfig.get('backEndHost') + "/";
-          this.aps = new APSPersonDetailsService(appConfig.get('apsHost'),http);
-          this.acs = new ACSPersonDetailsService(appConfig.get('acsHost'),http);
+  private backendUrl;
+  private backendMsg;
+  private error;
+  
+  constructor(private http:Http,
+        private appConfig: AppConfigService, private authenticationService: AuthenticationService) {
+          this.token=authenticationService.getToken();
+          this.acsUrl=appConfig.get("ecmHost")+"/api/-default-/public/alfresco/versions/1/people/-me-";
+          this.apsUrl=appConfig.get("bpmHost")+"/api/enterprise/profile";
+          this.backendUrl=appConfig.get("backendHost")+"/hello/welcome";
   }
+
 
   private ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-       this.id = params['id'];
-      });
-    this.dbpEndpointsConsumtion();
-    this.getResponse(this.id);
+    this.callBackend();
+    this.callsToDBP();
   }
 
-  getResponse(id) {
-     this.apiUrl += id;
-     console.debug("apiUrl", this.apiUrl);
-     let accessToken = this.oauthService.getAccessToken();
-     console.debug('access-token', accessToken);
-     let myHeaders = new Headers();
-     myHeaders.set("Authorization", "Bearer " + accessToken);
-     let options = new RequestOptions({ headers: myHeaders });
-     return this.http.get(this.apiUrl, options).
-       map((res: Response) => res.json()).subscribe(data => {
-         this.msg=data.value;
-         this.data = data;
-       },
-       err => {
-         this.msg = 'ERROR: Something went wrong!';
-       })
-   }
-  dbpEndpointsConsumtion() {
-    let accessToken = this.oauthService.getAccessToken();
-    console.debug('access-token', accessToken);
-    let myHeaders = new Headers();
-    myHeaders.set("Authorization", "Bearer " + accessToken);
-    let options = new RequestOptions({ headers: myHeaders });
-    this.aps.callPersonDetailsService(options);
-    this.acs.callPersonDetailsService(options);
-    
+  callBackend() {
+    this.http.get(this.backendUrl)
+      .subscribe(res => {
+        this.backendMsg = res.json().value;
+      },
+      err => {
+        this.error = 'ERROR: Hello World Backend Service not responding!';
+      });
   }
+
+  callsToDBP() {
+    let myHeaders = new Headers();
+    myHeaders.set("Authorization", "Bearer " + this.token);
+    let options = new RequestOptions({ headers: myHeaders });
+    this.callAPS(options);
+    this.callACS(options);
+  }
+
+  callAPS(options:RequestOptions) {
+    this.http.get(this.apsUrl, options)
+      .subscribe(res => {
+        this.apsLastName = res.json().lastName;
+        this.apsEmail = res.json().email;
+      },
+      err => {
+        this.apsError = 'ERROR: Alfresco Process Service not responding!';
+      });
+  }
+
+  callACS(options:RequestOptions) {
+    this.http.get(this.acsUrl, options)
+      .subscribe(res => {
+        this.acsFirstName = res.json().entry.firstName;
+        this.acsEmail = res.json().entry.email;
+      },
+      err => {
+        this.acsError = 'ERROR: Alfresco Content Service not responding!';
+      });
+  }
+
 }

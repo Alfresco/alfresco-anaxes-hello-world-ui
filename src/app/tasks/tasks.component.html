@@ -11,14 +11,15 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License. -->
-<h3>Please select a feature in the app menu</h3>
-<p>{{backendMsg}}</p>
-<p>{{error}}</p>
-<p>Alfresco Process Services</p>
-<div style="color: blueviolet">Last name: {{apsLastName}}</div>
-<p style="color:chocolate">Email: {{apsEmail}}</p>
-<p>{{apsError}}<p>
-<p>Alfresco Content Services<p>
-<div style="color: blueviolet">First name: {{acsFirstName}}</div>
-<p style="color:chocolate">Email: {{acsEmail}}</p>
-<p>{{acsError}}</p>
+<h3>Tasks</h3>
+
+<a *ngIf="appId" md-button href="" routerLink="/apps/{{appId}}/start-process">
+  Start new process
+</a>
+
+<adf-tasklist
+  [appId]="appId"
+  state="open"
+  assignment="assignee"
+  (rowClick)="onRowClick($event)">
+</adf-tasklist>

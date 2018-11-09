@@ -1,0 +1,40 @@
+<!-- Copyright 2018 Alfresco Software, Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. -->
+  <adf-toolbar>
+  <adf-toolbar-title>
+    <adf-breadcrumb
+      class="files-breadcrumb"
+      root="Personal Files"
+      [target]="documentList"
+      [folderNode]="documentList.folderNode">
+    </adf-breadcrumb>
+  </adf-toolbar-title>
+
+  <div class="adf-toolbar--spacer"></div>
+
+  <adf-upload-button
+    [rootFolderId]="documentList.currentFolderId || '-root-'"
+    [adf-node-permission]="'create'"
+    (success)="uploadSuccess($event)">
+  </adf-upload-button>
+
+</adf-toolbar>
+
+<adf-document-list
+  #documentList
+  currentFolderId="-root-"
+  (preview)="showPreview($event)">
+</adf-document-list>
+
+<adf-file-uploading-dialog></adf-file-uploading-dialog>

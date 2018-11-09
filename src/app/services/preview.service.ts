@@ -1,4 +1,5 @@
-/*
+/*!
+ * @license
  * Copyright 2018 Alfresco Software, Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,15 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NgModule } from '@angular/core';
-import { CoreModule } from 'ng2-alfresco-core';
 
-export function modules() {
-  return [ CoreModule ];
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Injectable()
+export class PreviewService {
+
+    public content: Blob = null;
+    public name: string = null;
+
+    constructor(private router: Router) {}
+
+    showResource(resourceId): void {
+        this.router.navigate([{ outlets: { overlay: ['files', resourceId, 'view'] } }]);
+    }
+
+    showBlob(name: string, content: Blob): void {
+        this.name = name;
+        this.content = content;
+        this.router.navigate([{ outlets: { overlay: ['preview', 'blob'] } }]);
+    }
 }
-
-@NgModule({
-  imports: modules(),
-  exports: modules()
-})
-export class AdfModule {}

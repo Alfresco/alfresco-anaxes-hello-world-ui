@@ -13,28 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ViewEncapsulation, Component } from '@angular/core';
-import { TranslationService, AuthenticationService } from '@alfresco/adf-core';
+import { Component } from '@angular/core';
+import { PreviewService } from '../services/preview.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    templateUrl: 'bob-view.component.html'
 })
-export class AppComponent {
+export class BlobViewComponent {
+    content: Blob;
+    name: string;
 
-  constructor(translationService: TranslationService,
-              private authService: AuthenticationService,
-              private router: Router) {
-    translationService.use('en');
-  }
+    constructor(preview: PreviewService, router: Router) {
+        if (preview.content === null || preview.name === null) {
+            router.navigate([{ outlets: { overlay: null } }]);
+            return;
+        }
 
-  logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
-  }
-
+        this.content = preview.content;
+        this.name = preview.name;
+    }
 }

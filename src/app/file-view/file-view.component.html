@@ -1,0 +1,84 @@
+<!-- Copyright 2018 Alfresco Software, Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. -->
+<ng-container *ngIf="nodeId">
+
+    <ng-template let-node="node" #sidebarTemplate>
+        <adf-info-drawer [title]="'APP.INFO_DRAWER.TITLE' | translate">
+            <adf-info-drawer-tab [label]="'APP.INFO_DRAWER.COMMENTS' | translate">
+                <adf-comments [nodeId]="nodeId"></adf-comments>
+            </adf-info-drawer-tab>
+
+            <adf-info-drawer-tab [label]="'APP.INFO_DRAWER.PROPERTIES' | translate">
+                <adf-content-metadata-card [node]="node"></adf-content-metadata-card>
+            </adf-info-drawer-tab>
+
+            <adf-info-drawer-tab [label]="'APP.INFO_DRAWER.VERSIONS' | translate">
+                <mat-card>
+                    <mat-card-content>
+                        <adf-version-manager [node]="node"
+                                             (uploadError)="uploadError($event)">
+                        </adf-version-manager>
+                    </mat-card-content>
+                </mat-card>
+            </adf-info-drawer-tab>
+        </adf-info-drawer>
+    </ng-template>
+
+    <adf-viewer [nodeId]="nodeId" [allowSidebar]="true" [sidebarTemplate]="sidebarTemplate">
+
+        <adf-viewer-toolbar-actions>
+            <button mat-icon-button>
+                <mat-icon>alarm</mat-icon>
+            </button>
+            <button mat-icon-button>
+                <mat-icon>backup</mat-icon>
+            </button>
+            <button mat-icon-button>
+                <mat-icon>bug_report</mat-icon>
+            </button>
+        </adf-viewer-toolbar-actions>
+
+        <!--
+        <adf-viewer-extension [supportedExtensions]="['json']">
+            <ng-template let-urlFileContent="urlFileContent" let-extension="extension">
+            <h1>JSON VIEWER</h1>
+            </ng-template>
+        </adf-viewer-extension>
+        -->
+
+        <!--
+        <adf-viewer-extension [supportedExtensions]="['png']">
+            <ng-template>
+            <h1>PNG Viewer</h1>
+            </ng-template>
+        </adf-viewer-extension>
+        -->
+
+        <!--
+        <adf-viewer-extension [supportedExtensions]="['pdf']">
+            <ng-template>
+            <h1>PDF Viewer</h1>
+            </ng-template>
+        </adf-viewer-extension>
+        -->
+
+        <!--
+        <extension-viewer [supportedExtensions]="['obj','3DS']" #extension>
+            <ng-template let-urlFileContent="urlFileContent" let-extension="extension" >
+            <threed-viewer [urlFile]="urlFileContent" [extension]="extension" ></threed-viewer>
+            </ng-template>
+        </extension-viewer>
+        -->
+    </adf-viewer>
+</ng-container>

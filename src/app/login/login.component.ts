@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { Component } from '@angular/core';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
-
-import 'hammerjs';
-
-import * as pdfjsLib from 'pdfjs-dist';
-pdfjsLib.PDFJS.workerSrc = 'pdf.worker.js';
-
-if (environment.production) {
-  enableProdMode();
-}
-
-platformBrowserDynamic().bootstrapModule(AppModule);
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {}

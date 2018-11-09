@@ -1,0 +1,69 @@
+{
+    "$schema": "../node_modules/@alfresco/adf-core/app.config.schema.json",
+    "ecmHost": "ACS_URL",
+    "bpmHost": "APS_URL",
+    "backendHost": "HELLO_BACKEND_URL",
+    
+    "providers" : "ALL",
+    "application": {
+        "name": "Alfresco Anaxes Hello World App"
+    },
+    "languages": [
+        {
+            "key": "en",
+            "label": "English"
+        },
+        {
+            "key": "fr",
+            "label": "French"
+        },
+        {
+            "key": "de",
+            "label": "German"
+        },
+        {
+            "key": "it",
+            "label": "Italian"
+        },
+        {
+            "key": "es",
+            "label": "Spanish"
+        },
+        {
+            "key": "ja",
+            "label": "Japanese"
+        },
+        {
+            "key": "nl",
+            "label": "Dutch"
+        },
+        {
+            "key": "pt-BR",
+            "label": "Brazilian Portuguese"
+        },
+        {
+            "key": "nb",
+            "label": "Norwegian"
+        },
+        {
+            "key": "ru",
+            "label": "Russian"
+        },
+        {
+            "key": "zh-CN",
+            "label": "Simplified Chinese"
+        }
+    ],
+    "logLevel" : "trace",
+    "authType" :"OAUTH",
+    "oauth2": {
+      "host": "IDENTITY_SERVICE_URL/realms/alfresco",
+      "clientId": "alfresco",
+      "scope": "openid",
+      "secret": "",
+      "implicitFlow": true,
+      "silentLogin": false,
+      "redirectUri": "/hello-ui/",
+      "redirectUriLogout": "/logout"
+    }
+}

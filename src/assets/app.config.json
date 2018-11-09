@@ -1,6 +1,0 @@
-{
-    "backEndHost": "HELLO_BACKEND_URL",
-    "acsHost": "ACS_URL",
-    "apsHost": "APS_URL",
-    "identityServiceHost": "IDENTITY_SERVICE_URL"
-}

@@ -13,32 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContentModule } from '@alfresco/adf-content-services';
 import { ProcessModule } from '@alfresco/adf-process-services';
 import { CoreModule } from '@alfresco/adf-core';
+import { StartProcessComponent } from './start-process.component';
+import { AlfrescoApiServiceMock, AlfrescoApiService } from '@alfresco/adf-core';
 
-import { AppComponent } from './app.component';
+describe('StartProcessComponent', () => {
+  let component: StartProcessComponent;
+  let fixture: ComponentFixture<StartProcessComponent>;
 
-describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         CoreModule.forRoot(),
         ContentModule.forRoot(),
         ProcessModule.forRoot()
       ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-  }));
+      declarations: [StartProcessComponent],
+      providers: [
+        { provide: AlfrescoApiService, useClass: AlfrescoApiServiceMock }
+      ]
+    });
+  });
 
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
+  beforeEach(() => {
+    fixture = TestBed.createComponent(StartProcessComponent);
+    component = fixture.componentInstance;
+    // fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

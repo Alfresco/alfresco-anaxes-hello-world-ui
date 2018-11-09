@@ -14,30 +14,43 @@
  * limitations under the License.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeComponent } from './home.component';
+import { ContentModule } from '@alfresco/adf-content-services';
+import { ProcessModule } from '@alfresco/adf-process-services';
+import { CoreModule } from '@alfresco/adf-core';
 
-describe('HomeComponent', () => {
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+import { AppLayoutComponent } from './app-layout.component';
+import { AlfrescoApiServiceMock, AlfrescoApiService } from '@alfresco/adf-core';
+
+describe('AppLayoutComponent', () => {
+  let component: AppLayoutComponent;
+  let fixture: ComponentFixture<AppLayoutComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        CoreModule.forRoot(),
+        ContentModule.forRoot(),
+        ProcessModule.forRoot()
       ],
-      declarations: [ HomeComponent ]
+      declarations: [AppLayoutComponent],
+      providers: [
+        { provide: AlfrescoApiService, useClass: AlfrescoApiServiceMock }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomeComponent);
+    fixture = TestBed.createComponent(AppLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should be created', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });
